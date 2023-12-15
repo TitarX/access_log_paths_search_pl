@@ -14,22 +14,26 @@ if (!-d $root_path) {
 }
 
 my $current_folder_path = getcwd();
-
 my @result_list = ();
+
 my $log_file_path = "@{[$current_folder_path]}/access.log";
 open(my $log_file, '<', $log_file_path) or die 'Cannot open log file';
 while (my $line = <$log_file>) {
     if (my @path_search_result = $line =~ m/\d]\s"[A-Z]{3,7}\s(\/[^\s]+?)\s/is) {
-        my $path_search = "@{[$root_path]}@{[$path_search_result[0]]}";
-        if (-f $path_search) {
-            push @result_list, $line;
+        if ($path_search_result[0]) {
+            my $path_search = "@{[$root_path]}@{[$path_search_result[0]]}";
+            if (-f $path_search && !grep(/^$path_search_result[0]$/, @result_list)) {
+                push @result_list, $path_search_result[0];
+            }
         }
-
-        print @result_list;
-        print "\n";
     }
 }
 close $log_file;
+
+@result_list = sort @result_list;
+
+print join("\n", @result_list);
+print "\n";
 
 # my $result_file_path = "@{[$current_folder_path]}/result.txt";
 # open(my $result_file, '>', $result_file_path) or exit 'Cannot create or open result file';
