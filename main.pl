@@ -41,7 +41,6 @@ close $log_file;
 
 my $result_file_path = "@{[$current_folder_path]}/result.txt";
 open(my $result_file, '>', $result_file_path) or exit 'Cannot create or open result file';
-# print $result_file 'Проверка';
 print $result_file join("\n", @result_list);
 print $result_file "\n";
 close $result_file;
